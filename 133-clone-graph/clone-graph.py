@@ -16,7 +16,6 @@ class Solution(object):
         if node is None:
             return None
 
-            
         def dfs(node):
             if node in hashmap:
                 return hashmap[node]
