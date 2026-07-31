@@ -1,27 +1,35 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        best_start = 0
-        best_length = 1
+        n = len(s)
 
-        def expand(left, right):
-            nonlocal best_start, best_length
+        if n <= 1:
+            return s
 
-            while (
-                left >= 0
-                and right < len(s)
-                and s[left] == s[right]
-            ):
-                current_length = right - left + 1
+        # dp[i][j] is True if s[i:j+1] is a palindrome
+        dp = [[False] * n for _ in range(n)]
 
-                if current_length > best_length:
-                    best_start = left
-                    best_length = current_length
+        longest_start = 0
+        longest_length = 1
 
-                left -= 1
-                right += 1
+        # Check substrings from shortest to longest
+        for length in range(1, n + 1):
+            for i in range(n - length + 1):
+                j = i + length - 1
 
-        for centre in range(len(s)):
-            expand(centre, centre)       # Odd:  "aba"
-            expand(centre, centre + 1)   # Even: "abba"
+                if length == 1:
+                    dp[i][j] = True
 
-        return s[best_start:best_start + best_length]
+                elif length == 2:
+                    dp[i][j] = s[i] == s[j]
+
+                else:
+                    dp[i][j] = (
+                        s[i] == s[j]
+                        and dp[i + 1][j - 1]
+                    )
+
+                if dp[i][j] and length > longest_length:
+                    longest_start = i
+                    longest_length = length
+
+        return s[longest_start:longest_start + longest_length]
