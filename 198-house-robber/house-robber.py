@@ -1,23 +1,20 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        # You can either skip one house, skip two house, skip three house etc...
         hashmap = {}
-        
-        def rec(index):
-            if index >= len(nums):
+
+        def dp(start, end):
+            if (start, end) in hashmap:
+                return hashmap[(start, end)]
+
+            if start > end:
                 return 0
 
-            if index in hashmap:
-                return hashmap[index]
-            
-            if index == len(nums) - 1:
-                return nums[-1]
+            if start == end:
+                return nums[start]
 
-            current = nums[index] + rec(index +2)
-            skip_current = rec(index+1)
+            maximum = max(nums[start] + dp(start + 2, end), dp(start + 1, end))
 
-            number = max(current, skip_current)
-            hashmap[index] = number
-            return number
+            hashmap[(start, end)] = maximum
+            return maximum
 
-        return rec(0)
+        return dp(0, len(nums) - 1)
