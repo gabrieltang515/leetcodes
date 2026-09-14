@@ -1,36 +1,26 @@
-class Solution(object):
-    def canFinish(self, numCourses, prerequisites):
-        """
-        :type numCourses: int
-        :type prerequisites: List[List[int]]
-        :rtype: bool
-        """
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         visited = set()
-        # Build graph first
+        visiting = set()
+
         graph = defaultdict(list)
 
-        for course in prerequisites:
-            actual, prereq = course
-            graph[prereq].append(actual)
-        
-        visiting = set()
-        visited = set()
+        for course, prereq in prerequisites:
+            graph[prereq].append(course)
 
-        # DFS should conduct cycle finding
         def dfs(course):
             if course in visiting:
-                return False  # cycle found
-
+                # cycle detected here
+                return False
+            
             if course in visited:
-                return True   # already checked, no cycle from here
+                return True # already checked, no cycle from here. a tad bit of wishful thinking
 
             visiting.add(course)
-
-            for next_course in graph[course]:
-                if not dfs(next_course):
+            for cor in graph[course]:
+                if not dfs(cor):
                     return False
 
-            # Backtracking idea here
             visiting.remove(course)
             visited.add(course)
 
@@ -40,12 +30,11 @@ class Solution(object):
             if not dfs(course):
                 return False
 
+
+
         return True
 
-
-
             
-            
-
+        
 
             
